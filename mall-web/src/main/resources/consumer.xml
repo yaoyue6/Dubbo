@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://dubbo.apache.org/schema/dubbo
+        http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.yaoyue.service" />
+
+    <dubbo:application name="mall-consumer" />
+
+    <dubbo:registry address="zookeeper://106.14.19.0:2181" />
+
+    <!--retries：重试次数，不包括第一调用-->
+    <!--幂等操作（设置重试次数）查询、删除、更新，非幂等操作（不能设置幂等操作）新增-->
+    <!--version：进行多版本控制，实现灰度发布，指定调用生产者版本，如果为*，则随机调用-->
+    <dubbo:reference interface="com.yaoyue.service.UserService" id="userService" retries="3" version="2.0.0" />
+
+    <bean id="userController" class="com.yaoyue.controller.UserController" />
+</beans>
